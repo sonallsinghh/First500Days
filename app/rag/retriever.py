@@ -29,6 +29,8 @@ def retrieve_documents(
     
     Uses FAISS with sentence transformers embeddings to find semantically
     similar chunks based on meaning, not just keyword matching.
+    
+    Returns chunks with their sources and similarity scores for better filtering.
     """
     # Encode query into embedding vector
     query_embedding = embedding_model.encode(
@@ -42,6 +44,7 @@ def retrieve_documents(
 
     results = []
     sources = set()
+    chunk_metadata = []  # Store chunk info with scores
 
     # Return results based on semantic similarity scores
     for score, idx in zip(distances[0], indices[0]):
@@ -55,13 +58,18 @@ def retrieve_documents(
         doc = metadata[idx]
         results.append(doc["content"])
         sources.add(doc["source"])
+        chunk_metadata.append({
+            "content": doc["content"],
+            "source": doc["source"],
+            "score": float(score)
+        })
 
-    return results, list(sources)
+    return results, list(sources), chunk_metadata
 
 
 
 if __name__ == "__main__":
-    chunks, sources = retrieve_documents(
+    chunks, sources, metadata = retrieve_documents(
         "can we take emergency leave?"
     )
 
