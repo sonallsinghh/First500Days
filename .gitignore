@@ -10,3 +10,5 @@ __pycache__/
 .DS_Store
 faiss_index
 meta.pkl
+init.py
+__init__.py
