@@ -8,3 +8,5 @@ __pycache__/
 .cursor/
 .cursor/
 .DS_Store
+faiss_index
+meta.pkl
