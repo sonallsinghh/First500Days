@@ -1,8 +1,9 @@
 fastapi
 uvicorn
+gunicorn
 openai
-python-dotenv
 sentence-transformers
 faiss-cpu
-tiktoken
 pypdf
+tiktoken
+python-dotenv
