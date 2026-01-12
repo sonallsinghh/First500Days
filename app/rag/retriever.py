@@ -1,15 +1,10 @@
 import faiss
 import pickle
 import numpy as np
-from sentence_transformers import SentenceTransformer
+from app.rag.hf_embeddings import get_embeddings
 
 INDEX_PATH = "faiss_index/index.faiss"
 META_PATH = "faiss_index/meta.pkl"
-
-# Load embedding model once
-embedding_model = SentenceTransformer(
-    "sentence-transformers/all-MiniLM-L6-v2"
-)
 
 # Load FAISS index
 index = faiss.read_index(INDEX_PATH)
@@ -32,12 +27,8 @@ def retrieve_documents(
     
     Returns chunks with their sources and similarity scores for better filtering.
     """
-    # Encode query into embedding vector
-    query_embedding = embedding_model.encode(
-        [query],
-        convert_to_numpy=True,
-        normalize_embeddings=True
-    )
+    # Encode query into embedding vector using Hugging Face API
+    query_embedding = get_embeddings(query, normalize=True)
 
     # Search FAISS index for similar embeddings
     distances, indices = index.search(query_embedding, top_k)
