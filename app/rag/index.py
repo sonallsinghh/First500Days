@@ -1,28 +1,19 @@
 import faiss
 import pickle
-from sentence_transformers import SentenceTransformer
 from app.rag.ingest import load_documents
+from app.rag.hf_embeddings import get_embeddings
 
 INDEX_PATH = "faiss_index/index.faiss"
 META_PATH = "faiss_index/meta.pkl"
-
-# Load embedding model ONCE
-embedding_model = SentenceTransformer(
-    "sentence-transformers/all-MiniLM-L6-v2"
-)
 
 
 def build_index(doc_dir: str):
     documents = load_documents(doc_dir)
     texts = [doc["content"] for doc in documents]
 
-    # 🔹 Normalize embeddings for cosine similarity
-    embeddings = embedding_model.encode(
-        texts,
-        convert_to_numpy=True,
-        normalize_embeddings=True,
-        show_progress_bar=True
-    )
+    # 🔹 Get embeddings from Hugging Face API (normalized for cosine similarity)
+    print(f"Generating embeddings for {len(texts)} chunks using Hugging Face API...")
+    embeddings = get_embeddings(texts, normalize=True, batch_size=32)
 
     dimension = embeddings.shape[1]
 

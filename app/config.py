@@ -10,3 +10,12 @@ if not OPENAI_API_KEY:
         "OPENAI_API_KEY not found in environment variables. "
         "Please set it in your .env file or as an environment variable."
     )
+
+HUGGINGFACE_API_KEY = os.getenv("HUGGINGFACE_API_KEY")
+
+if not HUGGINGFACE_API_KEY:
+    raise ValueError(
+        "HUGGINGFACE_API_KEY not found in environment variables. "
+        "Please set it in your .env file or as an environment variable. "
+        "Get your API key from https://huggingface.co/settings/tokens"
+    )
